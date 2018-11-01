@@ -5,56 +5,58 @@
         <id column="pet_id" jdbcType="INTEGER" property="petId"/>
         <result column="category_id" jdbcType="INTEGER" property="categoryId"/>
         <result column="pet_name" jdbcType="VARCHAR" property="petName"/>
-        <result column="pet_photo" jdbcType="VARCHAR" property="petPhoto"/>
-        <result column="tag_id" jdbcType="INTEGER" property="tagId"/>
+        <result column="pet_price" jdbcType="DECIMAL" property="petPrice"/>
         <result column="pet_status" jdbcType="VARCHAR" property="petStatus"/>
 
-        <collection property="category" ofType="com.nf147.ssm.entity.Category">
-            <id column="category_id" jdbcType="INTEGER" property="categoryId" />
-            <result column="category_name" jdbcType="VARCHAR" property="categoryName" />
+        <collection property="photoList" ofType="com.nf147.ssm.entity.Photo">
+            <id column="photo_id" jdbcType="INTEGER" property="photoId"/>
+            <result column="photo_name" jdbcType="VARCHAR" property="photoName"/>
+            <result column="pet_id" jdbcType="INTEGER" property="petId"/>
         </collection>
 
-        <collection property="tag" ofType="com.nf147.ssm.entity.Tag">
+        <collection property="tagList" ofType="com.nf147.ssm.entity.Tag">
             <id column="tag_id" jdbcType="INTEGER" property="tagId" />
             <result column="tag_name" jdbcType="VARCHAR" property="tagName" />
+            <result column="pet_id" jdbcType="INTEGER" property="petId" />
         </collection>
-    </resultMap>
-    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-    delete from pet
-    where pet_id = #{petId,jdbcType=INTEGER}
-  </delete>
-    <insert id="insert" parameterType="com.nf147.ssm.entity.Pet">
-    insert into pet (pet_id, category_id, pet_name, 
-      pet_photo, tag_id, pet_status
-      )
-    values (#{petId,jdbcType=INTEGER}, #{categoryId,jdbcType=INTEGER}, #{petName,jdbcType=VARCHAR}, 
-      #{petPhoto,jdbcType=VARCHAR}, #{tagId,jdbcType=INTEGER}, #{petStatus,jdbcType=VARCHAR}
-      )
-  </insert>
-    <update id="updateByPrimaryKey" parameterType="com.nf147.ssm.entity.Pet">
-    update pet
-    set category_id = #{categoryId,jdbcType=INTEGER},
-      pet_name = #{petName,jdbcType=VARCHAR},
-      pet_photo = #{petPhoto,jdbcType=VARCHAR},
-      tag_id = #{tagId,jdbcType=INTEGER},
-      pet_status = #{petStatus,jdbcType=VARCHAR}
-    where pet_id = #{petId,jdbcType=INTEGER}
-  </update>
-    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-    select pet_id, c.category_id, pet_name, pet_photo, t.tag_id, pet_status,c.category_name,t.tag_name
-            from Pet p inner join Category c on p.category_id=c.category_id
-            inner join Tag t on t.tag_id=p.tag_id;
-    where pet_id = #{petId,jdbcType=INTEGER}
-  </select>
-    <select id="selectAll" resultMap="BaseResultMap">
-        select pet_id, c.category_id, pet_name, pet_photo, t.tag_id, pet_status,c.category_name,t.tag_name
-            from Pet p inner join Category c on p.category_id=c.category_id
-            inner join Tag t on t.tag_id=p.tag_id;
-  </select>
 
-    <select id="findByStatus" parameterType="java.lang.String" resultMap="BaseResultMap">
-        select pet_id, c.category_id, pet_name, pet_photo, t.tag_id, pet_status,c.category_name,t.tag_name
-            from Pet p inner join Category c on p.category_id=c.category_id
-            inner join Tag t on t.tag_id=p.tag_id; where pet_status=#{pet_status,jdbcType=VARCHAR}
+     </resultMap>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+        delete from pet
+        where pet_id = #{petId,jdbcType=INTEGER}
+    </delete>
+    <insert id="insert" parameterType="com.nf147.ssm.entity.Pet">
+        insert into pet (pet_id, category_id, pet_name,
+        pet_price, pet_status)
+        values (#{petId,jdbcType=INTEGER}, #{categoryId,jdbcType=INTEGER}, #{petName,jdbcType=VARCHAR},
+        #{petPrice,jdbcType=DECIMAL}, #{petStatus,jdbcType=VARCHAR})
+    </insert>
+    <update id="updateByPrimaryKey" parameterType="com.nf147.ssm.entity.Pet">
+        update pet
+        set category_id = #{categoryId,jdbcType=INTEGER},
+        pet_name = #{petName,jdbcType=VARCHAR},
+        pet_price = #{petPrice,jdbcType=DECIMAL},
+        pet_status = #{petStatus,jdbcType=VARCHAR}
+        where pet_id = #{petId,jdbcType=INTEGER}
+    </update>
+    <update id="updatePetStatus" parameterType="com.nf147.ssm.entity.Pet">
+        update pet set pet_status=#{petStatus,jdbcType=VARCHAR} where pet_id=#{petId,jdbcType=INTEGER}
+    </update>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select p.pet_id, category_id, pet_name, pet_price, pet_status,t.tag_name,photo_name from
+        pet p inner join tag t on p.pet_id=t.pet_id
+        inner join photo ph on p.pet_id=ph.pet_id;
+        where pet_id = #{petId,jdbcType=INTEGER}
+    </select>
+    <select id="selectAll" resultMap="BaseResultMap">
+        select p.pet_id, category_id, pet_name, pet_price, pet_status,t.tag_name,photo_name from
+        pet p inner join tag t on p.pet_id=t.pet_id
+        inner join photo ph on p.pet_id=ph.pet_id;
+    </select>
+    <select id="findByStatus" resultMap="BaseResultMap" parameterType="java.lang.String">
+         select p.pet_id, category_id, pet_name, pet_price, pet_status,t.tag_name,photo_name from
+        pet p inner join tag t on p.pet_id=t.pet_id
+        inner join photo ph on p.pet_id=ph.pet_id;
+        where pet_status = #{pet_status,jdbcType=VARCHAR}
     </select>
 </mapper>

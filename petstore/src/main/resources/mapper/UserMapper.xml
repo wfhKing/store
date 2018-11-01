@@ -12,33 +12,47 @@
         <result column="user_status" jdbcType="INTEGER" property="userStatus"/>
     </resultMap>
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-    delete from user
-    where user_id = #{userId,jdbcType=INTEGER}
-  </delete>
+        delete from user
+        where user_id = #{userId,jdbcType=INTEGER}
+    </delete>
     <delete id="deleteByName" parameterType="java.lang.String">
-    delete from user
-    where user_name = #{userName,jdbcType=VARCHAR}
-  </delete>
-
+        delete from user
+        where user_name = #{userName,jdbcType=VARCHAR}
+    </delete>
     <insert id="insert" parameterType="com.nf147.ssm.entity.User">
-    insert into user (user_id, user_name, user_first_name, 
-      user_last_name, user_email, user_password, 
-      user_phone, user_status)
-    values (#{userId,jdbcType=INTEGER}, #{userName,jdbcType=VARCHAR}, #{userFirstName,jdbcType=VARCHAR}, 
-      #{userLastName,jdbcType=VARCHAR}, #{userEmail,jdbcType=VARCHAR}, #{userPassword,jdbcType=VARCHAR}, 
-      #{userPhone,jdbcType=VARCHAR}, #{userStatus,jdbcType=INTEGER})
-  </insert>
+        <selectKey keyProperty="userId" order="BEFORE" resultType="java.lang.Integer">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        insert into user (user_id, user_name, user_first_name,
+        user_last_name, user_email, user_password,
+        user_phone, user_status)
+        values (#{userId,jdbcType=INTEGER}, #{userName,jdbcType=VARCHAR}, #{userFirstName,jdbcType=VARCHAR},
+        #{userLastName,jdbcType=VARCHAR}, #{userEmail,jdbcType=VARCHAR}, #{userPassword,jdbcType=VARCHAR},
+        #{userPhone,jdbcType=VARCHAR}, #{userStatus,jdbcType=INTEGER})
+
+    </insert>
+    <insert id="insertAll" parameterType="java.util.List">
+        insert into user (user_id, user_name, user_first_name,
+        user_last_name, user_email, user_password,
+        user_phone, user_status)
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.userId,jdbcType=INTEGER}, #{item.userName,jdbcType=VARCHAR}, #{item.userFirstName,jdbcType=VARCHAR},
+            #{item.userLastName,jdbcType=VARCHAR}, #{item.userEmail,jdbcType=VARCHAR},
+            #{item.userPassword,jdbcType=VARCHAR},
+            #{item.userPhone,jdbcType=VARCHAR}, #{item.userStatus,jdbcType=INTEGER})
+        </foreach>
+    </insert>
     <update id="updateByPrimaryKey" parameterType="com.nf147.ssm.entity.User">
-    update user
-    set user_name = #{userName,jdbcType=VARCHAR},
-      user_first_name = #{userFirstName,jdbcType=VARCHAR},
-      user_last_name = #{userLastName,jdbcType=VARCHAR},
-      user_email = #{userEmail,jdbcType=VARCHAR},
-      user_password = #{userPassword,jdbcType=VARCHAR},
-      user_phone = #{userPhone,jdbcType=VARCHAR},
-      user_status = #{userStatus,jdbcType=INTEGER}
-    where user_id = #{userId,jdbcType=INTEGER}
-  </update>
+        update user
+        set user_name = #{userName,jdbcType=VARCHAR},
+        user_first_name = #{userFirstName,jdbcType=VARCHAR},
+        user_last_name = #{userLastName,jdbcType=VARCHAR},
+        user_email = #{userEmail,jdbcType=VARCHAR},
+        user_password = #{userPassword,jdbcType=VARCHAR},
+        user_phone = #{userPhone,jdbcType=VARCHAR},
+        user_status = #{userStatus,jdbcType=INTEGER}
+        where user_id = #{userId,jdbcType=INTEGER}
+    </update>
     <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
         select user_id, user_name, user_first_name, user_last_name, user_email, user_password,
         user_phone, user_status
@@ -50,8 +64,9 @@
         user_phone, user_status
         from user
     </select>
-    <select id="getByName" parameterType="java.util.String" resultMap="BaseResultMap">
+    <select id="getByName" resultMap="BaseResultMap" resultType="java.lang.String">
         select user_id, user_name, user_first_name, user_last_name, user_email, user_password,
-        user_phone, user_status where user_name=#{userName,jdbcType=VARCHAR}
+        user_phone, user_status
+        from user where user_name=#{userName,jdbcType=VARCHAR}
     </select>
 </mapper>

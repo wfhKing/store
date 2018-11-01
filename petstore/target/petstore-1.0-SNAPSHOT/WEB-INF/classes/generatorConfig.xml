@@ -28,8 +28,7 @@
         <javaClientGenerator targetPackage="${basePackage}.dao"
                              targetProject=".\src\main\java" type="XMLMAPPER"/>
 
-
-        <table tableName="%">
+        <table tableName="Order">
             <property name="useActualColumnNames" value="false"/>
         </table>
 

@@ -13,7 +13,9 @@ public interface PetMapper {
 
     List<Pet> selectAll();
 
+    Pet findByStatus(String petStatus);
+
     int updateByPrimaryKey(Pet record);
 
-    Pet findByStatus(String pet_status);
+    int updatePetStatus(Pet pet);
 }
