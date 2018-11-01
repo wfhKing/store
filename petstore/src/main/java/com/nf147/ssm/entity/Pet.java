@@ -20,9 +20,19 @@ public class Pet {
 
     private String petStatus;
 
+    private Category category;
+
     private List<Photo> photoList;
 
     private List<Tag> tagList;
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
+    }
 
     public List<Photo> getPhotoList() {
         return photoList;
