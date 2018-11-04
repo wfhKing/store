@@ -1,8 +1,10 @@
 package com.nf147.ssm.controller;
 
+import com.nf147.ssm.dao.CategoryMapper;
 import com.nf147.ssm.dao.InventoriesMapper;
 import com.nf147.ssm.dao.PetMapper;
 import com.nf147.ssm.dao.PhotoMapper;
+import com.nf147.ssm.entity.Category;
 import com.nf147.ssm.entity.Inventories;
 import com.nf147.ssm.entity.Pet;
 import com.nf147.ssm.entity.Photo;
@@ -28,27 +30,32 @@ public class PetController {
     @Autowired
     private PhotoMapper photoMapper;
 
+    @Autowired
+    private CategoryMapper categoryMapper;
+
     @RequestMapping(value = "/list")
-    public String list(Model model){
+    public String list(Model model) {
         List<Pet> pets = petMapper.selectAll();
-        model.addAttribute("pets",pets);
+        model.addAttribute("pets", pets);
+        List<Category> categories = categoryMapper.selectAll();
+        model.addAttribute("categories",categories);
         return "list";
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    @ResponseBody
-    public String insert(@RequestBody Pet pet, @RequestBody Inventories inventories) {
+//    public String insert(@RequestBody Pet pet, @RequestBody Inventories inventories) {
+    public String insert(Pet pet) {
         petMapper.insert(pet);
-        inventoriesMapper.insert(inventories);
+//        inventoriesMapper.insert(inventories);
 //        return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).body("输入无效");
-        return "{\"msg\":\"宠物添加成功\"}";
+//        return "{\"msg\":\"宠物添加成功\"}";
+        return "redirect:/pet/list";
     }
 
-    @RequestMapping(method = RequestMethod.PUT)
-    @ResponseBody
-    public String update(@RequestBody Pet pet) {
+    @RequestMapping(value = "/update",method = RequestMethod.POST)
+    public String update(Pet pet) {
         petMapper.updateByPrimaryKey(pet);
-        return "{\"msg\":\"修改成功\"}";
+        return "redirect:/pet/list";
     }
 
     @RequestMapping(value = "/findByStatus", method = RequestMethod.GET)
@@ -59,19 +66,20 @@ public class PetController {
         return "{\"msg\":\"根据状态查询成功\"}";
     }
 
-    @RequestMapping(method = RequestMethod.GET)
-    @ResponseBody
-    public String selectByPrimaryKey(@RequestParam("petId") int petId, Model model) {
+    @RequestMapping(value = "/selectByPrimaryKey", method = RequestMethod.GET)
+    public String selectByPrimaryKey(int petId, Model model) {
         Pet pet = petMapper.selectByPrimaryKey(petId);
         model.addAttribute("pet", pet);
-        return "{\"msg\":\"根据宠物ID查询成功\"}";
+        List<Category> categories = categoryMapper.selectAll();
+        model.addAttribute("categories",categories);
+//        return "{\"msg\":\"根据宠物ID查询成功\"}";
+        return "petUpdate";
     }
 
-    @RequestMapping(method = RequestMethod.DELETE)
-    @ResponseBody
-    public String delete(@RequestParam("petId") int petId) {
+    @RequestMapping(value = "/delete",method = RequestMethod.GET)
+    public String delete(int petId) {
         petMapper.deleteByPrimaryKey(petId);
-        return "{\"msg\":\"删除成功\"}";
+        return "redirect:/pet/list";
     }
 
     @RequestMapping(value = "/uploadImage", method = RequestMethod.POST)

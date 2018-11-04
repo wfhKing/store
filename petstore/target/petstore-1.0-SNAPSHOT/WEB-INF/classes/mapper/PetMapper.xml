@@ -8,6 +8,11 @@
         <result column="pet_price" jdbcType="DECIMAL" property="petPrice"/>
         <result column="pet_status" jdbcType="VARCHAR" property="petStatus"/>
 
+        <collection property="category" ofType="com.nf147.ssm.entity.Category">
+            <id column="category_id" jdbcType="INTEGER" property="categoryId" />
+            <result column="category_name" jdbcType="VARCHAR" property="categoryName" />
+        </collection>
+
         <collection property="photoList" ofType="com.nf147.ssm.entity.Photo">
             <id column="photo_id" jdbcType="INTEGER" property="photoId"/>
             <result column="photo_name" jdbcType="VARCHAR" property="photoName"/>
@@ -43,20 +48,29 @@
         update pet set pet_status=#{petStatus,jdbcType=VARCHAR} where pet_id=#{petId,jdbcType=INTEGER}
     </update>
     <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-        select p.pet_id, category_id, pet_name, pet_price, pet_status,t.tag_name,photo_name from
+        <!-- select p.pet_id, c.category_id, pet_name, pet_price, pet_status,t.tag_name,photo_name,category_name from
         pet p inner join tag t on p.pet_id=t.pet_id
-        inner join photo ph on p.pet_id=ph.pet_id;
-        where pet_id = #{petId,jdbcType=INTEGER}
+        inner join photo ph on p.pet_id=ph.pet_id
+        inner join category c on c.category_id=p.category_id -->
+        select p.pet_id, c.category_id, pet_name, pet_price, pet_status,category_name from
+        pet p inner join category c on c.category_id=p.category_id
+        where p.pet_id = #{petId,jdbcType=INTEGER}
     </select>
     <select id="selectAll" resultMap="BaseResultMap">
-        select p.pet_id, category_id, pet_name, pet_price, pet_status,t.tag_name,photo_name from
+
+        <!-- select p.pet_id, c.category_id, pet_name, pet_price, pet_status,t.tag_name,photo_name,category_name from
         pet p inner join tag t on p.pet_id=t.pet_id
-        inner join photo ph on p.pet_id=ph.pet_id;
+        inner join photo ph on p.pet_id=ph.pet_id
+        inner join category c on c.category_id=p.category_id -->
+        select p.pet_id, c.category_id, pet_name, pet_price, pet_status,category_name from
+        pet p
+        inner join category c on c.category_id=p.category_id
     </select>
     <select id="findByStatus" resultMap="BaseResultMap" parameterType="java.lang.String">
-         select p.pet_id, category_id, pet_name, pet_price, pet_status,t.tag_name,photo_name from
+         select p.pet_id, c.category_id, pet_name, pet_price, pet_status,t.tag_name,photo_name from
         pet p inner join tag t on p.pet_id=t.pet_id
-        inner join photo ph on p.pet_id=ph.pet_id;
+        inner join photo ph on p.pet_id=ph.pet_id
+        inner join category c on c.category_id=p.category_id
         where pet_status = #{pet_status,jdbcType=VARCHAR}
     </select>
 </mapper>
