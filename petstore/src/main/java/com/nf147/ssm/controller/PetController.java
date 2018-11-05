@@ -38,7 +38,7 @@ public class PetController {
         List<Pet> pets = petMapper.selectAll();
         model.addAttribute("pets", pets);
         List<Category> categories = categoryMapper.selectAll();
-        model.addAttribute("categories",categories);
+        model.addAttribute("categories", categories);
         return "list";
     }
 
@@ -52,8 +52,10 @@ public class PetController {
         return "redirect:/pet/list";
     }
 
-    @RequestMapping(value = "/update",method = RequestMethod.POST)
+    @RequestMapping(value = "/update", method = RequestMethod.POST)
     public String update(Pet pet) {
+        Photo photo = photoMapper.selectByPrimaryKey(pet.getPetId());
+        System.out.println(photo);
         petMapper.updateByPrimaryKey(pet);
         return "redirect:/pet/list";
     }
@@ -71,21 +73,21 @@ public class PetController {
         Pet pet = petMapper.selectByPrimaryKey(petId);
         model.addAttribute("pet", pet);
         List<Category> categories = categoryMapper.selectAll();
-        model.addAttribute("categories",categories);
+        model.addAttribute("categories", categories);
 //        return "{\"msg\":\"根据宠物ID查询成功\"}";
         return "petUpdate";
     }
 
-    @RequestMapping(value = "/delete",method = RequestMethod.GET)
+    @RequestMapping(value = "/delete", method = RequestMethod.GET)
     public String delete(int petId) {
         petMapper.deleteByPrimaryKey(petId);
         return "redirect:/pet/list";
     }
 
     @RequestMapping(value = "/uploadImage", method = RequestMethod.POST)
-    public String insertImage(@RequestBody Photo photo) {
+    public String insertImage(Photo photo) {
         photoMapper.insert(photo);
-        return "{\"msg\":\"图片上传成功\"}";
+        return "";
     }
 
 }

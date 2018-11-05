@@ -7,9 +7,10 @@
 </head>
 <body>
 
-<form:form action="/pet/update" method="post">
-    宠物ID：<span>${pet.petId}</span>
+<form action="/pet/update" method="post">
+    宠物ID：<input type="hidden" name="petId" value="${pet.petId}" readonly>
     宠物名：<input type="text" name="petName" value="${pet.petName}">
+
     宠物类型：
     <select name="categoryId">
         <option value="${pet.category.categoryId}">${pet.category.categoryName}</option>
@@ -26,7 +27,7 @@
         <option value="已售出">已售出</option>
     </select>
     <input type="submit" value="确认修改">
-</form:f>
+</form>
 <br/><br/>
 
 </body>

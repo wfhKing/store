@@ -13,14 +13,21 @@ insert into `User`(user_name,user_first_name,user_last_name,user_email,user_pass
 ('刘德华','德华','刘','9234213623@qq.com','123456','13393482349',0);
 select*from `User`;
 
+select p.pet_id, c.category_id, pet_name, pet_price, pet_status,t.tag_name,photo_name from
+        pet p left join tag t on p.pet_id=t.pet_id
+        left join photo ph on p.pet_id=ph.pet_id
+        inner join category c on c.category_id=p.category_id
+        
+
 create table Category( 	# 类型
 	category_id int primary key auto_increment,
 	category_name varchar(50)
 )ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
 insert into Category(category_name) values
-('狗'),('猫'),('鸟'),('鱼')
+('狗'),('猫'),('鸟'),('鱼');
 select*from Category;
 
+drop table pet;
 create table Pet(
 	pet_id int primary key auto_increment,
 	category_id int references Category(category_id),
@@ -34,23 +41,24 @@ insert into Pet(category_id,pet_name,pet_price,pet_status) values
 (1,'藏獒',4000,'待定'),
 (2,'波斯猫',2000,'可用'),
 (3,'金鱼',10,'已售出');
-select*from Pet;
+select*from pet;
 
-select p.pet_id, category_id, pet_name, pet_price, pet_status,t.tag_name,photo_name from 
-pet p inner join tag t on p.pet_id=t.pet_id
-inner join photo ph on p.pet_id=ph.pet_id;
-
-
-
+drop table photo;
 create table Photo(		# 图片
 	photo_id int primary key auto_increment,
 	photo_name varchar(100),
 	pet_id int references Pet(pet_id)
 )ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
 insert into Photo(photo_name,pet_id) values('1.jpg',1);
-insert into Photo(photo_name,pet_id) values('2.jpg',1);
-insert into Photo(photo_name,pet_id) values('3.jpg',2);
+insert into Photo(photo_name,pet_id) values('2.jpg',2);
+insert into Photo(photo_name,pet_id) values('3.jpg',3);
+insert into Photo(photo_name,pet_id) values('4.jpg',4);
+insert into Photo(photo_name,pet_id) values('5.jpg',5);
 select*from photo;
+
+select photo_id, photo_name, pet_id
+    from photo
+    where pet_id=1;
 
 create table Tag(			# 标签
 	tag_id int primary key auto_increment,
